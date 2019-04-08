@@ -127,81 +127,40 @@ ARM Macro Assembler    Page 2
     8 00000000                 IMPORT           Display
     9 00000000                 IMPORT           CLKINIT
    10 00000000                 IMPORT           INTHAND
-   11 00000000                 IMPORT           MSCNT
+   11 00000000                 IMPORT           RGBLED
 
 
 
 ARM Macro Assembler    Page 3 
 
 
-   12 00000000                 IMPORT           SCNT
-   13 00000000                 IMPORT           MICNT
+   12 00000000         
+   13 00000000         
    14 00000000         
-   15 00000000         ;R=17 B=18 G=21
-   16 00000000         
-   17 00000000         ;Main loop
-   18 00000000         start
-   19 00000000 EBFFFFFE        BL               CLKINIT
-   20 00000004 E59F0070        LDR              R0, =VICDEFVECTADDR
-   21 00000008 E59F1070        LDR              R1, =INTHAND
-   22 0000000C E5801000        STR              R1, [R0]
-   23 00000010 E59F006C        LDR              R0, =VICINTENABLE
-   24 00000014 E3A01010        LDR              R1, =(2_1 << 4)
-   25 00000018 E5801000        STR              R1, [R0]
-   26 0000001C E59F0064        LDR              R0, =SCNT
-   27 00000020 E3A02000        LDR              R2, =0
-   28 00000024 E3A03008        LDR              R3, =8
-   29 00000028 E59F405C        LDR              R4, =LUT
-   30 0000002C E3A02826        LDR              R2, =0x260000
-   31 00000030 E59F5058        LDR              R5, =IO0DIR
-   32 00000034 E5852000        STR              R2, [R5]
-   33 00000038         
-   34 00000038 E59F5054        LDR              R5, =IO0CLR
-   35 0000003C E59F6054        LDR              R6, =IO0SET
-   36 00000040         
-   37 00000040         
-   38 00000040         LP
-   39 00000040 E5D01000        LDRB             R1, [R0]
-   40 00000044 E1520001        CMP              R2, R1
-   41 00000048 E1A02001        MOV              R2, R1
-   42 0000004C 0AFFFFFB        BEQ              LP
-   43 00000050 EBFFFFFE        BL               Display
-   44 00000054         
-   45 00000054 E5867000        STR              R7, [R6]
-   46 00000058 E7947003        LDR              R7, [R4, R3]
-   47 0000005C E5857000        STR              R7, [R5]
-   48 00000060         
-   49 00000060 E2533004        SUBS             r3, #4
-   50 00000064 33A03008        LDRCC            r3, =8
-   51 00000068 EAFFFFF4        B                LP
-   52 0000006C         
-   53 0000006C 00020000 
-                       LUT     DCD              1<<17
-   54 00000070 00200000        DCD              1<<21
-   55 00000074 00040000        DCD              1<<18
-   56 00000078         
-   57 00000078         
-   58 00000078 EAFFFFFE 
+   15 00000000         ;Main loop
+   16 00000000         start
+   17 00000000 EBFFFFFE        BL               CLKINIT
+   18 00000004 E59F0018        LDR              R0, =VICDEFVECTADDR
+   19 00000008 E59F1018        LDR              R1, =INTHAND
+   20 0000000C E5801000        STR              R1, [R0]
+   21 00000010 E59F0014        LDR              R0, =VICINTENABLE
+   22 00000014 E3A01010        LDR              R1, =(2_1 << 4)
+   23 00000018 E5801000        STR              R1, [R0]
+   24 0000001C         ;;Init ^^
+   25 0000001C         
+   26 0000001C EAFFFFFE        B                RGBLED
+   27 00000020         
+   28 00000020         
+   29 00000020 EAFFFFFE 
                        stop    B                stop
-   59 0000007C                 END
+   30 00000024                 END
               FFFFF034 
               00000000 
               FFFFF010 
-              00000000 
-              00000000 
-              E0028008 
-              E002800C 
-              E0028004 
 Command Line: --debug --xref --diag_suppress=9931 --apcs=interwork --depend=.\a
-
-
-
-ARM Macro Assembler    Page 4 
-
-
 pp.d -o.\app.o -IC:\Keil_v5\ARM\RV31\INC -IC:\Keil_v5\ARM\CMSIS\Include -IC:\Ke
-il_v5\ARM\Inc\Philips --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VE
-RSION SETA 516" --list=.\listings\app.lst App.s
+il_v5\ARM\INC\Philips --predefine="__EVAL SETA 1" --predefine="__MICROLIB SETA 
+1" --predefine="__UVISION_VERSION SETA 525" --list=.\listings\app.lst App.s
 
 
 
@@ -223,23 +182,6 @@ Comment: AsmTemplate unused
 ARM Macro Assembler    Page 1 Alphabetic symbol ordering
 Relocatable symbols
 
-LP 00000040
-
-Symbol: LP
-   Definitions
-      At line 38 in file App.s
-   Uses
-      At line 42 in file App.s
-      At line 51 in file App.s
-
-LUT 0000006C
-
-Symbol: LUT
-   Definitions
-      At line 53 in file App.s
-   Uses
-      At line 29 in file App.s
-Comment: LUT used once
 REG_DEFS 00000000
 
 Symbol: REG_DEFS
@@ -252,19 +194,19 @@ start 00000000
 
 Symbol: start
    Definitions
-      At line 18 in file App.s
+      At line 16 in file App.s
    Uses
       At line 6 in file App.s
 Comment: start used once
-stop 00000078
+stop 00000020
 
 Symbol: stop
    Definitions
-      At line 58 in file App.s
+      At line 29 in file App.s
    Uses
-      At line 58 in file App.s
+      At line 29 in file App.s
 Comment: stop used once
-5 symbols
+3 symbols
 
 
 
@@ -277,16 +219,16 @@ Symbol: IO0CLR
    Definitions
       At line 8 in file REG_DEFS.s
    Uses
-      At line 34 in file App.s
-Comment: IO0CLR used once
+      None
+Comment: IO0CLR unused
 IO0DIR E0028008
 
 Symbol: IO0DIR
    Definitions
       At line 7 in file REG_DEFS.s
    Uses
-      At line 31 in file App.s
-Comment: IO0DIR used once
+      None
+Comment: IO0DIR unused
 IO0PIN E0028000
 
 Symbol: IO0PIN
@@ -301,8 +243,8 @@ Symbol: IO0SET
    Definitions
       At line 6 in file REG_DEFS.s
    Uses
-      At line 35 in file App.s
-Comment: IO0SET used once
+      None
+Comment: IO0SET unused
 IO1CLR E002801C
 
 Symbol: IO1CLR
@@ -643,7 +585,7 @@ Symbol: VICDEFVECTADDR
    Definitions
       At line 18 in file REG_DEFS.s
    Uses
-      At line 20 in file App.s
+      At line 18 in file App.s
 Comment: VICDEFVECTADDR used once
 VICINTENABLE FFFFF010
 
@@ -651,7 +593,7 @@ Symbol: VICINTENABLE
    Definitions
       At line 17 in file REG_DEFS.s
    Uses
-      At line 23 in file App.s
+      At line 21 in file App.s
 Comment: VICINTENABLE used once
 VICINTSELECT FFFFF00C
 
@@ -688,7 +630,7 @@ Symbol: CLKINIT
    Definitions
       At line 9 in file App.s
    Uses
-      At line 19 in file App.s
+      At line 17 in file App.s
 Comment: CLKINIT used once
 Display 00000000
 
@@ -696,40 +638,24 @@ Symbol: Display
    Definitions
       At line 8 in file App.s
    Uses
-      At line 43 in file App.s
-Comment: Display used once
+      None
+Comment: Display unused
 INTHAND 00000000
 
 Symbol: INTHAND
    Definitions
       At line 10 in file App.s
    Uses
-      At line 21 in file App.s
+      At line 19 in file App.s
 Comment: INTHAND used once
-MICNT 00000000
+RGBLED 00000000
 
-Symbol: MICNT
-   Definitions
-      At line 13 in file App.s
-   Uses
-      None
-Comment: MICNT unused
-MSCNT 00000000
-
-Symbol: MSCNT
+Symbol: RGBLED
    Definitions
       At line 11 in file App.s
    Uses
-      None
-Comment: MSCNT unused
-SCNT 00000000
-
-Symbol: SCNT
-   Definitions
-      At line 12 in file App.s
-   Uses
       At line 26 in file App.s
-Comment: SCNT used once
+Comment: RGBLED used once
 main 00000000
 
 Symbol: main
@@ -738,5 +664,5 @@ Symbol: main
    Uses
       None
 Comment: main unused
-7 symbols
-393 symbols in table
+5 symbols
+390 symbols in table
