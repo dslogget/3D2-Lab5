@@ -1,0 +1,135 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000                 AREA             PIN_DEFS, CODE, READONLY
+    2 00000000         
+    3 00000000         
+    4 00000000         ;IO DEFS
+    5 00000000                 EXPORT           IO0PIN
+    6 00000000                 EXPORT           IO0SET
+    7 00000000                 EXPORT           IO0DIR
+    8 00000000                 EXPORT           IO0CLR
+    9 00000000                 EXPORT           IO1PIN
+   10 00000000                 EXPORT           IO1SET
+   11 00000000                 EXPORT           IO1DIR
+   12 00000000                 EXPORT           IO1CLR
+   13 00000000 E0028000 
+                       IO0PIN  EQU              0xE0028000
+   14 00000000 E0028004 
+                       IO0SET  EQU              0xE0028004
+   15 00000000 E0028008 
+                       IO0DIR  EQU              0xE0028008
+   16 00000000 E002800C 
+                       IO0CLR  EQU              0xE002800C
+   17 00000000 E0028010 
+                       IO1PIN  EQU              0xE0028010
+   18 00000000 E0028014 
+                       IO1SET  EQU              0xE0028014
+   19 00000000 E0028018 
+                       IO1DIR  EQU              0xE0028018
+   20 00000000 E002801C 
+                       IO1CLR  EQU              0xE002801C
+   21 00000000         
+   22 00000000         
+   23 00000000                 END
+Command Line: --debug --xref --diag_suppress=9931 --apcs=interwork --depend=.\p
+in_defs.d -o.\pin_defs.o -IC:\Keil_v5\ARM\RV31\INC -IC:\Keil_v5\ARM\CMSIS\Inclu
+de -IC:\Keil_v5\ARM\Inc\Philips --predefine="__EVAL SETA 1" --predefine="__MICR
+OLIB SETA 1" --predefine="__UVISION_VERSION SETA 516" --list=.\listings\pin_def
+s.lst PIN_DEFS.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+PIN_DEFS 00000000
+
+Symbol: PIN_DEFS
+   Definitions
+      At line 1 in file PIN_DEFS.s
+   Uses
+      None
+Comment: PIN_DEFS unused
+1 symbol
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+IO0CLR E002800C
+
+Symbol: IO0CLR
+   Definitions
+      At line 16 in file PIN_DEFS.s
+   Uses
+      At line 8 in file PIN_DEFS.s
+Comment: IO0CLR used once
+IO0DIR E0028008
+
+Symbol: IO0DIR
+   Definitions
+      At line 15 in file PIN_DEFS.s
+   Uses
+      At line 7 in file PIN_DEFS.s
+Comment: IO0DIR used once
+IO0PIN E0028000
+
+Symbol: IO0PIN
+   Definitions
+      At line 13 in file PIN_DEFS.s
+   Uses
+      At line 5 in file PIN_DEFS.s
+Comment: IO0PIN used once
+IO0SET E0028004
+
+Symbol: IO0SET
+   Definitions
+      At line 14 in file PIN_DEFS.s
+   Uses
+      At line 6 in file PIN_DEFS.s
+Comment: IO0SET used once
+IO1CLR E002801C
+
+Symbol: IO1CLR
+   Definitions
+      At line 20 in file PIN_DEFS.s
+   Uses
+      At line 12 in file PIN_DEFS.s
+Comment: IO1CLR used once
+IO1DIR E0028018
+
+Symbol: IO1DIR
+   Definitions
+      At line 19 in file PIN_DEFS.s
+   Uses
+      At line 11 in file PIN_DEFS.s
+Comment: IO1DIR used once
+IO1PIN E0028010
+
+Symbol: IO1PIN
+   Definitions
+      At line 17 in file PIN_DEFS.s
+   Uses
+      At line 9 in file PIN_DEFS.s
+Comment: IO1PIN used once
+IO1SET E0028014
+
+Symbol: IO1SET
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Absolute symbols
+
+   Definitions
+      At line 18 in file PIN_DEFS.s
+   Uses
+      At line 10 in file PIN_DEFS.s
+Comment: IO1SET used once
+8 symbols
+342 symbols in table

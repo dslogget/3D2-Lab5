@@ -1,0 +1,9 @@
+--cpu ARM7TDMI
+".\app.o"
+".\clock-init.o"
+".\interrupt handler.o"
+".\display.o"
+".\EA-LPC2138-EDU-ASM.lib"
+".\reg_defs.o"
+--library_type=microlib --strict --scatter ".\App.sct"
+--summary_stderr --info summarysizes -o .\App.axf
