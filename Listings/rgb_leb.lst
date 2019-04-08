@@ -4,7 +4,7 @@
 ARM Macro Assembler    Page 1 
 
 
-    1 00000000                 AREA             DisplayCode, CODE, READONLY
+    1 00000000                 AREA             ClockInit, CODE, READONLY
     2 00000000                 INCLUDE          REG_DEFS.s
     1 00000000                 AREA             REG_DEFS, CODE, READONLY
     2 00000000         
@@ -119,64 +119,75 @@ ARM Macro Assembler    Page 2
    55 00000000         
    56 00000000         
    57 00000000                 END
-    3 00000000         
-    4 00000000         ; Display 4 LSbs the value of R1 to the display
-    5 00000000                 EXPORT           Display
-    6 00000000         
-    7 00000000         Display
-    8 00000000 E92D401D        STMFD            sp!,  {R0, R2-R4, lr} ;Store al
-                                                            l registers that do
-                                                            n't return a value
-    9 00000004 E3A0280F        LDR              R2, =(2_1111 << 16)
+    3 00000000                 EXPORT           RGBLED
+    4 00000000                 IMPORT           SCNT
+    5 00000000         
+    6 00000000         ;R=17 B=18 G=21
+    7 00000000         
+    8 00000000         RGBLED
+    9 00000000 E59F0050        LDR              R0, =SCNT
+   10 00000004 E3A02000        LDR              R2, =0
+   11 00000008 E3A03008        LDR              R3, =8
 
 
 
 ARM Macro Assembler    Page 3 
 
 
-   10 00000008 E59F0040        LDR              R0, =IO1DIR
-   11 0000000C E5802000        STR              R2, [R0]
-   12 00000010 E3A02000        LDR              R2, =0
-   13 00000014 E3110008        TST              R1, #2_1000
-   14 00000018 13822001        ORRNE            R2, #2_0001
-   15 0000001C E3110004        TST              R1, #2_0100
-   16 00000020 13822002        ORRNE            R2, #2_0010
-   17 00000024 E3110002        TST              R1, #2_0010
-   18 00000028 13822004        ORRNE            R2, #2_0100
-   19 0000002C E3110001        TST              R1, #2_0001
-   20 00000030 13822008        ORRNE            R2, #2_1000
-   21 00000034 E59F0018        LDR              R0, =IO1SET
-   22 00000038 E3A0480F        LDR              R4, =(2_1111 << 16)
-   23 0000003C E5804000        STR              R4, [R0]
-   24 00000040 E59F0010        LDR              R0, =IO1CLR
-   25 00000044 E1A02802        LSL              R2, #16
-   26 00000048 E5802000        STR              R2, [R0]
-   27 0000004C E8BD801D        LDMFD            sp!,  {R0, R2-R4, pc}
-   28 00000050         
-   29 00000050         
-   30 00000050                 END
-              E0028018 
-              E0028014 
-              E002801C 
-Command Line: --debug --xref --diag_suppress=9931 --apcs=interwork --depend=.\d
-isplay.d -o.\display.o -IC:\Keil_v5\ARM\RV31\INC -IC:\Keil_v5\ARM\CMSIS\Include
+   12 0000000C E59F4048        LDR              R4, =LUT
+   13 00000010 E3A02826        LDR              R2, =0x260000
+   14 00000014 E59F5044        LDR              R5, =IO0DIR
+   15 00000018 E5852000        STR              R2, [R5]
+   16 0000001C         
+   17 0000001C E59F5040        LDR              R5, =IO0CLR
+   18 00000020 E59F6040        LDR              R6, =IO0SET
+   19 00000024         
+   20 00000024         
+   21 00000024         LP
+   22 00000024 E5D01000        LDRB             R1, [R0]
+   23 00000028 E1520001        CMP              R2, R1
+   24 0000002C E1A02001        MOV              R2, R1
+   25 00000030 0AFFFFFB        BEQ              LP
+   26 00000034         
+   27 00000034 E5867000        STR              R7, [R6]
+   28 00000038 E7947003        LDR              R7, [R4, R3]
+   29 0000003C E5857000        STR              R7, [R5]
+   30 00000040         
+   31 00000040 E2533004        SUBS             r3, #4
+   32 00000044 33A03008        LDRCC            r3, =8
+   33 00000048 EAFFFFF5        B                LP
+   34 0000004C         
+   35 0000004C 00020000 
+                       LUT     DCD              1<<17
+   36 00000050 00200000        DCD              1<<21
+   37 00000054 00040000        DCD              1<<18
+   38 00000058         
+   39 00000058         
+   40 00000058                 END
+              00000000 
+              00000000 
+              E0028008 
+              E002800C 
+              E0028004 
+Command Line: --debug --xref --diag_suppress=9931 --apcs=interwork --depend=.\r
+gb_leb.d -o.\rgb_leb.o -IC:\Keil_v5\ARM\RV31\INC -IC:\Keil_v5\ARM\CMSIS\Include
  -IC:\Keil_v5\ARM\INC\Philips --predefine="__EVAL SETA 1" --predefine="__MICROL
-IB SETA 1" --predefine="__UVISION_VERSION SETA 525" --list=.\listings\display.l
-st Display.s
+IB SETA 1" --predefine="__UVISION_VERSION SETA 525" --list=.\listings\rgb_leb.l
+st RGB_LEB.s
 
 
 
 ARM Macro Assembler    Page 1 Alphabetic symbol ordering
 Relocatable symbols
 
-DisplayCode 00000000
+ClockInit 00000000
 
-Symbol: DisplayCode
+Symbol: ClockInit
    Definitions
-      At line 1 in file Display.s
+      At line 1 in file RGB_LEB.s
    Uses
       None
-Comment: DisplayCode unused
+Comment: ClockInit unused
 1 symbol
 
 
@@ -184,14 +195,23 @@ Comment: DisplayCode unused
 ARM Macro Assembler    Page 1 Alphabetic symbol ordering
 Relocatable symbols
 
-Display 00000000
+LP 00000024
 
-Symbol: Display
+Symbol: LP
    Definitions
-      At line 7 in file Display.s
+      At line 21 in file RGB_LEB.s
    Uses
-      At line 5 in file Display.s
-Comment: Display used once
+      At line 25 in file RGB_LEB.s
+      At line 33 in file RGB_LEB.s
+
+LUT 0000004C
+
+Symbol: LUT
+   Definitions
+      At line 35 in file RGB_LEB.s
+   Uses
+      At line 12 in file RGB_LEB.s
+Comment: LUT used once
 REG_DEFS 00000000
 
 Symbol: REG_DEFS
@@ -200,7 +220,15 @@ Symbol: REG_DEFS
    Uses
       None
 Comment: REG_DEFS unused
-2 symbols
+RGBLED 00000000
+
+Symbol: RGBLED
+   Definitions
+      At line 8 in file RGB_LEB.s
+   Uses
+      At line 3 in file RGB_LEB.s
+Comment: RGBLED used once
+4 symbols
 
 
 
@@ -213,16 +241,16 @@ Symbol: IO0CLR
    Definitions
       At line 8 in file REG_DEFS.s
    Uses
-      None
-Comment: IO0CLR unused
+      At line 17 in file RGB_LEB.s
+Comment: IO0CLR used once
 IO0DIR E0028008
 
 Symbol: IO0DIR
    Definitions
       At line 7 in file REG_DEFS.s
    Uses
-      None
-Comment: IO0DIR unused
+      At line 14 in file RGB_LEB.s
+Comment: IO0DIR used once
 IO0PIN E0028000
 
 Symbol: IO0PIN
@@ -237,24 +265,24 @@ Symbol: IO0SET
    Definitions
       At line 6 in file REG_DEFS.s
    Uses
-      None
-Comment: IO0SET unused
+      At line 18 in file RGB_LEB.s
+Comment: IO0SET used once
 IO1CLR E002801C
 
 Symbol: IO1CLR
    Definitions
       At line 12 in file REG_DEFS.s
    Uses
-      At line 24 in file Display.s
-Comment: IO1CLR used once
+      None
+Comment: IO1CLR unused
 IO1DIR E0028018
 
 Symbol: IO1DIR
    Definitions
       At line 11 in file REG_DEFS.s
    Uses
-      At line 10 in file Display.s
-Comment: IO1DIR used once
+      None
+Comment: IO1DIR unused
 IO1PIN E0028010
 
 Symbol: IO1PIN
@@ -275,8 +303,8 @@ Absolute symbols
    Definitions
       At line 10 in file REG_DEFS.s
    Uses
-      At line 21 in file Display.s
-Comment: IO1SET used once
+      None
+Comment: IO1SET unused
 T0CCR E0004028
 
 Symbol: T0CCR
@@ -612,4 +640,19 @@ Symbol: VICVECTADDR
       None
 Comment: VICVECTADDR unused
 46 symbols
-384 symbols in table
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+SCNT 00000000
+
+Symbol: SCNT
+   Definitions
+      At line 4 in file RGB_LEB.s
+   Uses
+      At line 9 in file RGB_LEB.s
+Comment: SCNT used once
+1 symbol
+387 symbols in table

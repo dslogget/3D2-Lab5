@@ -1,11 +1,13 @@
 Dependencies for Project 'App', Target 'Sample': (DO NOT MODIFY !)
-F (.\App.s)(0x5C910D2D)(--cpu ARM7TDMI -g --apcs=interwork --pd "__MICROLIB SETA 1"-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\CMSIS\Include-I C:\Keil_v5\ARM\Inc\Philips--pd "__UVISION_VERSION SETA 516"--list .\listings\app.lst --xref -o .\app.o --depend .\app.d)
-I (REG_DEFS.s)(0x5C90EB8C)
-F (.\Clock-init.s)(0x5C90E696)(--cpu ARM7TDMI -g --apcs=interwork --pd "__MICROLIB SETA 1"-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\CMSIS\Include-I C:\Keil_v5\ARM\Inc\Philips--pd "__UVISION_VERSION SETA 516"--list .\listings\clock-init.lst --xref -o .\clock-init.o --depend .\clock-init.d)
-I (REG_DEFS.s)(0x5C90EB8C)
-F (.\Interrupt Handler.s)(0x5C9106AA)(--cpu ARM7TDMI -g --apcs=interwork --pd "__MICROLIB SETA 1"-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\CMSIS\Include-I C:\Keil_v5\ARM\Inc\Philips--pd "__UVISION_VERSION SETA 516"--list ".\listings\interrupt handler.lst" --xref -o ".\interrupt handler.o" --depend ".\interrupt handler.d")
-I (REG_DEFS.S)(0x5C90EB8C)
-F (.\Display.s)(0x5C90CA09)(--cpu ARM7TDMI -g --apcs=interwork --pd "__MICROLIB SETA 1"-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\CMSIS\Include-I C:\Keil_v5\ARM\Inc\Philips--pd "__UVISION_VERSION SETA 516"--list .\listings\display.lst --xref -o .\display.o --depend .\display.d)
-I (REG_DEFS.s)(0x5C90EB8C)
-F (.\EA-LPC2138-EDU-ASM.lib)(0x5C866DC7)()
-F (.\REG_DEFS.s)(0x5C90EB8C)(--cpu ARM7TDMI -g --apcs=interwork --pd "__MICROLIB SETA 1"-I C:\Keil_v5\ARM\RV31\INC-I C:\Keil_v5\ARM\CMSIS\Include-I C:\Keil_v5\ARM\Inc\Philips--pd "__UVISION_VERSION SETA 516"--list .\listings\reg_defs.lst --xref -o .\reg_defs.o --depend .\reg_defs.d)
+F (.\App.s)(0x5CAB1F28)(--cpu ARM7TDMI --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1"-IC:\Keil_v5\ARM\RV31\INC-IC:\Keil_v5\ARM\CMSIS\Include-IC:\Keil_v5\ARM\INC\Philips--pd "__UVISION_VERSION SETA 525"--list .\listings\app.lst --xref -o .\app.o --depend .\app.d)
+I (REG_DEFS.s)(0x5CAB1DFF)
+F (.\Clock-init.s)(0x5CAB1DFE)(--cpu ARM7TDMI --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1"-IC:\Keil_v5\ARM\RV31\INC-IC:\Keil_v5\ARM\CMSIS\Include-IC:\Keil_v5\ARM\INC\Philips--pd "__UVISION_VERSION SETA 525"--list .\listings\clock-init.lst --xref -o .\clock-init.o --depend .\clock-init.d)
+I (REG_DEFS.s)(0x5CAB1DFF)
+F (.\Interrupt Handler.s)(0x5CAB1DFE)(--cpu ARM7TDMI --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1"-IC:\Keil_v5\ARM\RV31\INC-IC:\Keil_v5\ARM\CMSIS\Include-IC:\Keil_v5\ARM\INC\Philips--pd "__UVISION_VERSION SETA 525"--list ".\listings\interrupt handler.lst" --xref -o ".\interrupt handler.o" --depend ".\interrupt handler.d")
+I (REG_DEFS.S)(0x5CAB1DFF)
+F (.\RGB_LEB.s)(0x5CAB1F10)(--cpu ARM7TDMI --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1"-IC:\Keil_v5\ARM\RV31\INC-IC:\Keil_v5\ARM\CMSIS\Include-IC:\Keil_v5\ARM\INC\Philips--pd "__UVISION_VERSION SETA 525"--list .\listings\rgb_leb.lst --xref -o .\rgb_leb.o --depend .\rgb_leb.d)
+I (REG_DEFS.s)(0x5CAB1DFF)
+F (.\Display.s)(0x5CAB1DFE)(--cpu ARM7TDMI --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1"-IC:\Keil_v5\ARM\RV31\INC-IC:\Keil_v5\ARM\CMSIS\Include-IC:\Keil_v5\ARM\INC\Philips--pd "__UVISION_VERSION SETA 525"--list .\listings\display.lst --xref -o .\display.o --depend .\display.d)
+I (REG_DEFS.s)(0x5CAB1DFF)
+F (.\EA-LPC2138-EDU-ASM.lib)(0x5CAB1DFE)()
+F (.\REG_DEFS.s)(0x5CAB1DFF)(--cpu ARM7TDMI --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1"-IC:\Keil_v5\ARM\RV31\INC-IC:\Keil_v5\ARM\CMSIS\Include-IC:\Keil_v5\ARM\INC\Philips--pd "__UVISION_VERSION SETA 525"--list .\listings\reg_defs.lst --xref -o .\reg_defs.o --depend .\reg_defs.d)

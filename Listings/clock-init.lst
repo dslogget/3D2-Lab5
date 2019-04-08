@@ -139,17 +139,17 @@ ARM Macro Assembler    Page 3
    14 0000001C         ;We want 73728 ticks to pass on the clock before inturru
                        pting
    15 0000001C         ;So prescale of 0
-   16 0000001C         ;Mr of 73728
+   16 0000001C         ;Mr of 73728 - 1
    17 0000001C         ;one reset and int
    18 0000001C E59F0024        LDR              R0, =T0PR
    19 00000020 E3A01000        LDR              R1, =0x00000000
    20 00000024         
    21 00000024 E59F0020        LDR              R0, =T0MR0
-   22 00000028 E3A01A12        LDR              R1, =73728
+   22 00000028 E59F1020        LDR              R1, =73727
    23 0000002C E5801000        STR              R1, [R0]
    24 00000030         
    25 00000030         
-   26 00000030 E59F0018        LDR              R0, =T0MCR
+   26 00000030 E59F001C        LDR              R0, =T0MCR
    27 00000034 E3A01003        LDR              R1, =(0x00000003)
    28 00000038 E5801000        STR              R1, [R0]
    29 0000003C         
@@ -161,11 +161,13 @@ ARM Macro Assembler    Page 3
               E0004070 
               E000400C 
               E0004018 
+              00011FFF 
               E0004014 
 Command Line: --debug --xref --diag_suppress=9931 --apcs=interwork --depend=.\c
 lock-init.d -o.\clock-init.o -IC:\Keil_v5\ARM\RV31\INC -IC:\Keil_v5\ARM\CMSIS\I
-nclude -IC:\Keil_v5\ARM\Inc\Philips --predefine="__MICROLIB SETA 1" --predefine
-="__UVISION_VERSION SETA 516" --list=.\listings\clock-init.lst Clock-init.s
+nclude -IC:\Keil_v5\ARM\INC\Philips --predefine="__EVAL SETA 1" --predefine="__
+MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 525" --list=.\listings\clo
+ck-init.lst Clock-init.s
 
 
 
@@ -615,4 +617,4 @@ Symbol: VICVECTADDR
       None
 Comment: VICVECTADDR unused
 46 symbols
-383 symbols in table
+384 symbols in table

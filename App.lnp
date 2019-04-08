@@ -2,6 +2,7 @@
 ".\app.o"
 ".\clock-init.o"
 ".\interrupt handler.o"
+".\rgb_leb.o"
 ".\display.o"
 ".\EA-LPC2138-EDU-ASM.lib"
 ".\reg_defs.o"
