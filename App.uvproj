@@ -440,6 +440,21 @@
               <FileType>2</FileType>
               <FilePath>.\RGB_LEB.s</FilePath>
             </File>
+            <File>
+              <FileName>ThreadStarter.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>.\ThreadStarter.s</FilePath>
+            </File>
+            <File>
+              <FileName>Calc.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>.\Calc.s</FilePath>
+            </File>
+            <File>
+              <FileName>RKP.s</FileName>
+              <FileType>2</FileType>
+              <FilePath>.\RKP.s</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

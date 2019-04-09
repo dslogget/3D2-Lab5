@@ -7,12 +7,12 @@ ARM Macro Assembler    Page 1
     1 00000000                 AREA             AsmTemplate, CODE, READONLY
     2 00000000                 IMPORT           main
     3 00000000         
-    4 00000000         
+    4 00000000         ; (c) Mike Brady, 2011 -- 2019.
     5 00000000         
-    6 00000000         
-    7 00000000         ; (c) Mike Brady, 2011 -- 2019.
-    8 00000000                 EXPORT           start
-    9 00000000                 INCLUDE          REG_DEFS.s
+    6 00000000                 IMPORT           ReadKeyPress ;Import subroutine
+                                                             to read keys
+    7 00000000                 IMPORT           Display
+    8 00000000                 INCLUDE          REG_DEFS.s
     1 00000000                 AREA             REG_DEFS, CODE, READONLY
     2 00000000         
     3 00000000         
@@ -126,209 +126,213 @@ ARM Macro Assembler    Page 2
    55 00000000         
    56 00000000         
    57 00000000                 END
-   10 00000000                 IMPORT           Display
-   11 00000000                 IMPORT           CLKINIT
+    9 00000000                 export           calc
+   10 00000000         
 
 
 
 ARM Macro Assembler    Page 3 
 
 
-   12 00000000                 IMPORT           INTHAND
-   13 00000000                 IMPORT           RGBLED
-   14 00000000                 EXPORT           thread0s
-   15 00000000                 EXPORT           thread1s
-   16 00000000                 EXPORT           curr_thread
-   17 00000000                 import           calc
-   18 00000000         
-   19 00000000         
-   20 00000000         
-   21 00000000         ;Main loop
-   22 00000000         start
-   23 00000000 E59F0060        LDR              R0, =thread0s
-   24 00000004 E2801C02        add              r1, r0, #512
-   25 00000008 E5801000        str              r1, [r0]
-   26 0000000C E59F1058        ldr              r1, =calc
-   27 00000010 E5801004        str              r1, [r0, #4]
-   28 00000014 E3A01010        ldr              r1, =0x10
-   29 00000018 E5801008        str              r1, [r0, #8]
-   30 0000001C         
-   31 0000001C E59F004C        LDR              R0, =thread1s
-   32 00000020 E2801C02        add              r1, r0, #512
-   33 00000024 E5801000        str              r1, [r0]
-   34 00000028 E59F1044        ldr              r1, =RGBLED
-   35 0000002C E5801004        str              r1, [r0, #4]
-   36 00000030 E3A01010        ldr              r1, =0x10
-   37 00000034 E5801008        str              r1, [r0, #8]
-   38 00000038         
-   39 00000038 E3A01003        ldr              r1, =3
-   40 0000003C E59F0034        ldr              r0, =curr_thread
-   41 00000040 E5801000        str              r1, [r0]
-   42 00000044         
-   43 00000044 EBFFFFFE        BL               CLKINIT
-   44 00000048 E59F002C        LDR              R0, =VICDEFVECTADDR
-   45 0000004C E59F102C        LDR              R1, =INTHAND
-   46 00000050 E5801000        STR              R1, [R0]
-   47 00000054 E59F0028        LDR              R0, =VICINTENABLE
-   48 00000058 E3A01010        LDR              R1, =(2_1 << 4)
-   49 0000005C E5801000        STR              R1, [R0]
-   50 00000060         ;;Init ^^
-   51 00000060 EAFFFFFE 
-                       idle    B                idle
-   52 00000064         
-   53 00000064         
-   54 00000064 EAFFFFFE 
-                       stop    B                stop
-   55 00000068         
-   56 00000068 00000000 
-              00000000 
-              00000000 
-              00000000 
-              00000000 
-              FFFFF034 
-              00000000 
-              FFFFF010         AREA             StackSpace, DATA, READWRITE
-   57 00000000 00000000 
-                       curr_thread
-                               dcd              0
-   58 00000004         
-   59 00000004 00 00 00 
+   11 00000000         ;Main loop
+   12 00000000         calc
+   13 00000000         ;val in R5 = value to display
+   14 00000000         
+   15 00000000 E3A05000        LDR              R5, =0
+   16 00000004 E59F1130        LDR              R1, =IO1DIR
+   17 00000008 E5912000        LDR              R2, [R1]
+   18 0000000C E382280F        ORR              R2, #(2_1111 << 16)
+   19 00000010 E5812000        STR              R2, [R1]
+   20 00000014 E59F1124        LDR              R1, =IO1SET
+   21 00000018 E3A0480F        LDR              R4, =(2_1111 << 16)
+   22 0000001C E5814000        STR              R4, [R1]
+   23 00000020         
+   24 00000020         
+   25 00000020 E3A07000        MOV              R7, #0      ;Initialising stack
+                                                             counter (doesn't i
+                                                            nclude itself)
+   26 00000024 E59FC118        LDR              R12, =STK_TOP ;Initialising sta
+                                                            ck pointer
+   27 00000028 E52C7004        STR              R7, [R12, #-4]! ;Adding stack c
+                                                            ounter to top of st
+                                                            ack
+   28 0000002C         
+   29 0000002C         
+   30 0000002C         
+   31 0000002C         LPST
+   32 0000002C E3A02000        LDR              R2, =0
+   33 00000030         
+   34 00000030         
+   35 00000030 EBFFFFFE        BL               ReadKeyPress ;Set R0 to +-{20-2
+                                                            3}
+   36 00000034         
+   37 00000034         ;Switch statement for button presses
+   38 00000034 E3500014        CMP              R0, #20
+   39 00000038 0A00000D        BEQ              CASE1
+   40 0000003C E3700014        CMP              R0, #-20
+   41 00000040 0A00002C        BEQ              DEFAULT
+   42 00000044 E3500015        CMP              R0, #21
+   43 00000048 0A00000C        BEQ              CASE2
+   44 0000004C E3700015        CMP              R0, #-21
+   45 00000050 0A000028        BEQ              DEFAULT
+   46 00000054 E3500016        CMP              R0, #22
+   47 00000058 0A00000B        BEQ              CASE3
+   48 0000005C E3700016        CMP              R0, #-22
+   49 00000060 0A000013        BEQ              CASE3L
+   50 00000064 E3500017        CMP              R0, #23
+   51 00000068 0A000007        BEQ              CASE3
+   52 0000006C E3700017        CMP              R0, #-23
+   53 00000070 0A000017        BEQ              CASE4L
+   54 00000074         
+   55 00000074         CASE1
+   56 00000074 E2855201        ADD              R5, R5, #(2_1 << 28)
+   57 00000078 E1A03E25        LSR              R3, R5, #28
+   58 0000007C EA00002B        B                SwitchEnd
+   59 00000080         
+   60 00000080         
+   61 00000080         CASE2
+   62 00000080 E2455201        SUB              R5, R5, #(2_1 << 28)
+   63 00000084 E1A03E25        LSR              R3, R5, #28
 
 
 
 ARM Macro Assembler    Page 4 
 
 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
+   64 00000088 EA000028        B                SwitchEnd
+   65 0000008C         
+   66 0000008C         
+   67 0000008C         CASE3
+   68 0000008C E49C7004        LDR              R7, [R12], #4 ;Pop stack counte
+                                                            r from stack
+   69 00000090 E3570002        CMP              R7, #2
+   70 00000094 AA000018        BGE              OPERATE     ;Check if there is 
+                                                            a number and an ope
+                                                            rator in the stack
+   71 00000098 E2877002        ADD              R7, #2      ;Increment stack co
+                                                            unter
+   72 0000009C E52C5004        STR              R5, [R12, #-4]! 
+                                                            ;Push R5 onto stack
+                                                            
+   73 000000A0 E52C0004        STR              R0, [R12, #-4]! ;Push operation
+                                                             onto stack
+   74 000000A4 E1A03E25        LSR              R3, R5, #28 ;Store for display
+   75 000000A8 E52C7004        STR              R7, [R12, #-4]! ;Store stack co
+                                                            unter
+   76 000000AC E3A05000        MOV              R5, #0      ;Reset R5
+   77 000000B0 EA00001E        B                SwitchEnd   ;Display Result
+   78 000000B4         
+   79 000000B4         
+   80 000000B4         CASE3L
+   81 000000B4 E92D0004        STMFD            sp!, {R2}   ;Store previous val
+                                                            ues
+   82 000000B8 E3A07000        MOV              R7, #0      ;Zero stack counter
+                                                            
+   83 000000BC E49C2004        LDR              R2, [R12], #4 ;Pop operator fro
+                                                            m stack
+   84 000000C0 E49C5004        LDR              R5, [R12], #4 ;Pop num1 from st
+                                                            ack
+   85 000000C4 E52C7004        STR              R7, [R12, #-4]! ;Store stack co
+                                                            unter
+   86 000000C8 E1A03E25        LSR              R3, R5, #28 ;Store for display
+   87 000000CC E8BD0004        LDMFD            sp!, {R2}   ;Restore to previou
+                                                            s values
+   88 000000D0 EA000016        B                SwitchEnd   ;Display Result
+   89 000000D4         
+   90 000000D4         CASE4L
+   91 000000D4 E92D0004        STMFD            sp!, {R2}   ;Store previous val
+                                                            ues
+   92 000000D8 E3A07000        MOV              R7, #0      ;Zero stack counter
+                                                            
+   93 000000DC E49C2004        LDR              R2, [R12], #4 ;Pop operator fro
+                                                            m stack
+   94 000000E0 E49C5004        LDR              R5, [R12], #4 ;Pop num1 from st
+                                                            ack
+   95 000000E4 E52C7004        STR              R7, [R12, #-4]! ;Store stack co
+                                                            unter
+   96 000000E8 E3A03000        MOV              R3, #0      ;Zero display
+   97 000000EC E3A05000        MOV              R5, #0      ;Zero number storag
+                                                            e
+   98 000000F0 E8BD0004        LDMFD            sp!, {R2}   ;Restore to previou
+                                                            s values
+   99 000000F4 EA00000D        B                SwitchEnd   ;Branch with Displa
+                                                            y 0
+  100 000000F8         
 
 
 
 ARM Macro Assembler    Page 5 
 
 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
+  101 000000F8         
+  102 000000F8         DEFAULT
+  103 000000F8         ;LDR R3, =2_1111
+  104 000000F8 EA00000C        B                SwitchEnd
+  105 000000FC         
+  106 000000FC         
+  107 000000FC         OPERATE
+  108 000000FC E92D0016        STMFD            sp!, {R1,R2,R4} ;Store previous
+                                                             values
+  109 00000100 E2477001        SUB              R7, #1      ;Decrement stack co
+                                                            unter
+  110 00000104 E49C4004        LDR              R4, [R12], #4 ;Pop operator fro
+                                                            m stack
+  111 00000108 E49C2004        LDR              R2, [R12], #4 ;Pop num1 from st
+                                                            ack
+  112 0000010C E3540016        CMP              R4, #22
+  113 00000110 00825005        ADDEQ            R5, R2, R5  ;Add num1 & num2
+  114 00000114 10425005        SUBNE            R5, R2, R5  ;Subtract num1 & nu
+                                                            m2
+  115 00000118 E52C5004        STR              R5, [R12, #-4]! ;Store output
+  116 0000011C E1A03E25        LSR              R3, R5, #28 ;Store for display
+  117 00000120 E52C7004        STR              R7, [R12, #-4]! ;Store stack co
+                                                            unter
+  118 00000124 E3A05000        MOV              R5, #0      ;Reset R5
+  119 00000128 E8BD0016        LDMFD            sp!, {R1,R2,R4} ;Restore to pre
+                                                            vious values
+  120 0000012C EAFFFFFF        B                SwitchEnd
+  121 00000130         
+  122 00000130         
+  123 00000130         
+  124 00000130         
+  125 00000130         
+  126 00000130         SwitchEnd
+  127 00000130         
+  128 00000130         ;Display to LEDs
+  129 00000130         
+  130 00000130 E1A01003        MOV              R1, R3
+  131 00000134         
+  132 00000134 EBFFFFFE        BL               Display
+  133 00000138         
+  134 00000138         ;TST R3, #2_1000
+  135 00000138         ;ORRNE R2, #2_0001
+  136 00000138         ;TST R3, #2_0100
+  137 00000138         ;ORRNE R2, #2_0010
+  138 00000138         ;TST R3, #2_0010
+  139 00000138         ;ORRNE R2, #2_0100
+  140 00000138         ;TST R3, #2_0001
+  141 00000138         ;ORRNE R2, #2_1000
+  142 00000138         ;LDR R1, =IO1SET
+  143 00000138         ;LDR R4, =(2_1111 << 16)
+  144 00000138         ;STR R4, [R1]
+  145 00000138         ;LDR R1, =IO1CLR
+  146 00000138         ;LSL R2, #16
+  147 00000138         ;STR R2, [R1]
+  148 00000138         
+  149 00000138         
+  150 00000138 EAFFFFBB        B                LPST
+  151 0000013C         
+  152 0000013C         
 
 
 
 ARM Macro Assembler    Page 6 
 
 
+  153 0000013C E0028018 
+              E0028014 
+              00000000         AREA             STK, CODE, READWRITE
+  154 00000000 00 00 00 
               00 00 00 
               00 00 00 
               00 00 00 
@@ -379,10 +383,6 @@ ARM Macro Assembler    Page 6
               00 00 00 
               00 00 00 
               00 00 00 
-              00 00 00 
-              00 00    thread0s
-                               space            512
-   60 00000204 00 00 00 
               00 00 00 
               00 00 00 
               00 00 00 
@@ -423,161 +423,13 @@ ARM Macro Assembler    Page 7
               00 00 00 
               00 00 00 
               00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-
-
-
-ARM Macro Assembler    Page 8 
-
-
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-
-
-
-ARM Macro Assembler    Page 9 
-
-
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00 00 
-              00 00    thread1s
-                               space            512
-   61 00000404         
-   62 00000404                 END
-Command Line: --debug --xref --diag_suppress=9931 --apcs=interwork --depend=.\a
-pp.d -o.\app.o -IC:\Keil_v5\ARM\RV31\INC -IC:\Keil_v5\ARM\CMSIS\Include -IC:\Ke
-il_v5\ARM\INC\Philips --predefine="__EVAL SETA 1" --predefine="__MICROLIB SETA 
-1" --predefine="__UVISION_VERSION SETA 525" --list=.\listings\app.lst App.s
+              00       STK_TOP SPACE            256
+  155 00000100         
+  156 00000100                 END
+Command Line: --debug --xref --diag_suppress=9931 --apcs=interwork --depend=.\c
+alc.d -o.\calc.o -IC:\Keil_v5\ARM\RV31\INC -IC:\Keil_v5\ARM\CMSIS\Include -IC:\
+Keil_v5\ARM\INC\Philips --predefine="__EVAL SETA 1" --predefine="__MICROLIB SET
+A 1" --predefine="__UVISION_VERSION SETA 525" --list=.\listings\calc.lst Calc.s
 
 
 
@@ -588,7 +440,7 @@ AsmTemplate 00000000
 
 Symbol: AsmTemplate
    Definitions
-      At line 1 in file App.s
+      At line 1 in file Calc.s
    Uses
       None
 Comment: AsmTemplate unused
@@ -599,6 +451,78 @@ Comment: AsmTemplate unused
 ARM Macro Assembler    Page 1 Alphabetic symbol ordering
 Relocatable symbols
 
+CASE1 00000074
+
+Symbol: CASE1
+   Definitions
+      At line 55 in file Calc.s
+   Uses
+      At line 39 in file Calc.s
+Comment: CASE1 used once
+CASE2 00000080
+
+Symbol: CASE2
+   Definitions
+      At line 61 in file Calc.s
+   Uses
+      At line 43 in file Calc.s
+Comment: CASE2 used once
+CASE3 0000008C
+
+Symbol: CASE3
+   Definitions
+      At line 67 in file Calc.s
+   Uses
+      At line 47 in file Calc.s
+      At line 51 in file Calc.s
+
+CASE3L 000000B4
+
+Symbol: CASE3L
+   Definitions
+      At line 80 in file Calc.s
+   Uses
+      At line 49 in file Calc.s
+Comment: CASE3L used once
+CASE4L 000000D4
+
+Symbol: CASE4L
+   Definitions
+      At line 90 in file Calc.s
+   Uses
+      At line 53 in file Calc.s
+Comment: CASE4L used once
+DEFAULT 000000F8
+
+Symbol: DEFAULT
+   Definitions
+      At line 102 in file Calc.s
+   Uses
+      At line 41 in file Calc.s
+      At line 45 in file Calc.s
+
+LPST 0000002C
+
+Symbol: LPST
+   Definitions
+      At line 31 in file Calc.s
+   Uses
+      At line 150 in file Calc.s
+Comment: LPST used once
+OPERATE 000000FC
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Relocatable symbols
+
+
+Symbol: OPERATE
+   Definitions
+      At line 107 in file Calc.s
+   Uses
+      At line 70 in file Calc.s
+Comment: OPERATE used once
 REG_DEFS 00000000
 
 Symbol: REG_DEFS
@@ -607,73 +531,52 @@ Symbol: REG_DEFS
    Uses
       None
 Comment: REG_DEFS unused
-idle 00000060
+SwitchEnd 00000130
 
-Symbol: idle
+Symbol: SwitchEnd
    Definitions
-      At line 51 in file App.s
+      At line 126 in file Calc.s
    Uses
-      At line 51 in file App.s
-Comment: idle used once
-start 00000000
+      At line 58 in file Calc.s
+      At line 64 in file Calc.s
+      At line 77 in file Calc.s
+      At line 88 in file Calc.s
+      At line 99 in file Calc.s
+      At line 104 in file Calc.s
+      At line 120 in file Calc.s
 
-Symbol: start
-   Definitions
-      At line 22 in file App.s
-   Uses
-      At line 8 in file App.s
-Comment: start used once
-stop 00000064
+calc 00000000
 
-Symbol: stop
+Symbol: calc
    Definitions
-      At line 54 in file App.s
+      At line 12 in file Calc.s
    Uses
-      At line 54 in file App.s
-Comment: stop used once
-4 symbols
+      At line 9 in file Calc.s
+Comment: calc used once
+11 symbols
 
 
 
 ARM Macro Assembler    Page 1 Alphabetic symbol ordering
 Relocatable symbols
 
-StackSpace 00000000
+STK 00000000
 
-Symbol: StackSpace
+Symbol: STK
    Definitions
-      At line 56 in file App.s
+      At line 153 in file Calc.s
    Uses
       None
-Comment: StackSpace unused
-curr_thread 00000000
+Comment: STK unused
+STK_TOP 00000000
 
-Symbol: curr_thread
+Symbol: STK_TOP
    Definitions
-      At line 57 in file App.s
+      At line 154 in file Calc.s
    Uses
-      At line 16 in file App.s
-      At line 40 in file App.s
-
-thread0s 00000004
-
-Symbol: thread0s
-   Definitions
-      At line 59 in file App.s
-   Uses
-      At line 14 in file App.s
-      At line 23 in file App.s
-
-thread1s 00000204
-
-Symbol: thread1s
-   Definitions
-      At line 60 in file App.s
-   Uses
-      At line 15 in file App.s
-      At line 31 in file App.s
-
-4 symbols
+      At line 26 in file Calc.s
+Comment: STK_TOP used once
+2 symbols
 
 
 
@@ -726,8 +629,8 @@ Symbol: IO1DIR
    Definitions
       At line 11 in file REG_DEFS.s
    Uses
-      None
-Comment: IO1DIR unused
+      At line 16 in file Calc.s
+Comment: IO1DIR used once
 IO1PIN E0028010
 
 Symbol: IO1PIN
@@ -748,8 +651,8 @@ Absolute symbols
    Definitions
       At line 10 in file REG_DEFS.s
    Uses
-      None
-Comment: IO1SET unused
+      At line 20 in file Calc.s
+Comment: IO1SET used once
 T0CCR E0004028
 
 Symbol: T0CCR
@@ -1052,16 +955,16 @@ Symbol: VICDEFVECTADDR
    Definitions
       At line 18 in file REG_DEFS.s
    Uses
-      At line 44 in file App.s
-Comment: VICDEFVECTADDR used once
+      None
+Comment: VICDEFVECTADDR unused
 VICINTENABLE FFFFF010
 
 Symbol: VICINTENABLE
    Definitions
       At line 17 in file REG_DEFS.s
    Uses
-      At line 47 in file App.s
-Comment: VICINTENABLE used once
+      None
+Comment: VICINTENABLE unused
 VICINTSELECT FFFFF00C
 
 
@@ -1091,53 +994,29 @@ Comment: VICVECTADDR unused
 ARM Macro Assembler    Page 1 Alphabetic symbol ordering
 External symbols
 
-CLKINIT 00000000
-
-Symbol: CLKINIT
-   Definitions
-      At line 11 in file App.s
-   Uses
-      At line 43 in file App.s
-Comment: CLKINIT used once
 Display 00000000
 
 Symbol: Display
    Definitions
-      At line 10 in file App.s
+      At line 7 in file Calc.s
    Uses
-      None
-Comment: Display unused
-INTHAND 00000000
+      At line 132 in file Calc.s
+Comment: Display used once
+ReadKeyPress 00000000
 
-Symbol: INTHAND
+Symbol: ReadKeyPress
    Definitions
-      At line 12 in file App.s
+      At line 6 in file Calc.s
    Uses
-      At line 45 in file App.s
-Comment: INTHAND used once
-RGBLED 00000000
-
-Symbol: RGBLED
-   Definitions
-      At line 13 in file App.s
-   Uses
-      At line 34 in file App.s
-Comment: RGBLED used once
-calc 00000000
-
-Symbol: calc
-   Definitions
-      At line 17 in file App.s
-   Uses
-      At line 26 in file App.s
-Comment: calc used once
+      At line 35 in file Calc.s
+Comment: ReadKeyPress used once
 main 00000000
 
 Symbol: main
    Definitions
-      At line 2 in file App.s
+      At line 2 in file Calc.s
    Uses
       None
 Comment: main unused
-6 symbols
-396 symbols in table
+3 symbols
+398 symbols in table
