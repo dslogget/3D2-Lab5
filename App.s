@@ -21,7 +21,7 @@
 ;Main loop
 start
 	LDR R0, =thread0s
-	add r1, r0, #512
+	add r1, r0, #(512)
 	str r1, [r0]
 	ldr r1, =calc
 	str r1, [r0, #4]
@@ -29,7 +29,7 @@ start
 	str r1, [r0, #8]
 	
 	LDR R0, =thread1s
-	add r1, r0, #512
+	add r1, r0, #(512-14*4)
 	str r1, [r0]
 	ldr r1, =RGBLED
 	str r1, [r0, #4]

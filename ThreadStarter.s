@@ -45,15 +45,16 @@ switch2thread1
 	LDMFD sp!, {r0-R12, lr}
 	MSR CPSR_c, #0x92
 	STMFD sp!, {r0, r1}
-	ldr r0, =thread0s
-	ldr lr, [r0, #4]
-	ldr r1, [r0, #8]
 	ldr r0, =curr_thread
 	ldr r1, =1
 	str r1, [r0]
-	MSR SPSR_c, r1
+	ldr r0, =thread1s
+	ldr lr, [r0, #4]
+	ldr r1, [r0, #8]
+	MSR SPSR_f, r1
+	LDMFD sp!, {r0, r1}
 	STMFD sp!, {lr}
-	LDMFD sp!, {r0, r1, pc}^
+	LDMFD sp!, {pc}^
 	
 	
 switch2thread0
@@ -65,15 +66,16 @@ skip
 	LDMFD sp!, {R0-R12, lr}
 	MSR CPSR_c, #0x92
 	STMFD sp!, {r0, r1}
-	ldr r0, =thread0s
-	ldr lr, [r0, #4]
-	ldr r1, [r0, #8]
 	ldr r0, =curr_thread
 	ldr r1, =0
 	str r1, [r0]
-	MSR SPSR_c, r1
+	ldr r0, =thread0s
+	ldr lr, [r0, #4]
+	ldr r1, [r0, #8]
+	MSR SPSR_f, r1
+	LDMFD sp!, {r0, r1}
 	STMFD sp!, {lr}
-	LDMFD sp!, {r0, r1, pc}^
+	LDMFD sp!, {pc}^
 	
 
 

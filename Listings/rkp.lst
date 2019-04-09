@@ -241,8 +241,8 @@ ARM Macro Assembler    Page 4
               E0028010 
 Command Line: --debug --xref --diag_suppress=9931 --apcs=interwork --depend=.\r
 kp.d -o.\rkp.o -IC:\Keil_v5\ARM\RV31\INC -IC:\Keil_v5\ARM\CMSIS\Include -IC:\Ke
-il_v5\ARM\INC\Philips --predefine="__EVAL SETA 1" --predefine="__MICROLIB SETA 
-1" --predefine="__UVISION_VERSION SETA 525" --list=.\listings\rkp.lst RKP.s
+il_v5\ARM\Inc\Philips --predefine="__EVAL SETA 1" --predefine="__MICROLIB SETA 
+1" --predefine="__UVISION_VERSION SETA 516" --list=.\listings\rkp.lst RKP.s
 
 
 

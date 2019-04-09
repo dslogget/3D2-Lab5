@@ -160,8 +160,8 @@ ARM Macro Assembler    Page 3
               E002801C 
 Command Line: --debug --xref --diag_suppress=9931 --apcs=interwork --depend=.\d
 isplay.d -o.\display.o -IC:\Keil_v5\ARM\RV31\INC -IC:\Keil_v5\ARM\CMSIS\Include
- -IC:\Keil_v5\ARM\INC\Philips --predefine="__EVAL SETA 1" --predefine="__MICROL
-IB SETA 1" --predefine="__UVISION_VERSION SETA 525" --list=.\listings\display.l
+ -IC:\Keil_v5\ARM\Inc\Philips --predefine="__EVAL SETA 1" --predefine="__MICROL
+IB SETA 1" --predefine="__UVISION_VERSION SETA 516" --list=.\listings\display.l
 st Display.s
 
 

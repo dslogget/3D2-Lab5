@@ -146,7 +146,7 @@ ARM Macro Assembler    Page 3
    21 00000000         ;Main loop
    22 00000000         start
    23 00000000 E59F0060        LDR              R0, =thread0s
-   24 00000004 E2801C02        add              r1, r0, #512
+   24 00000004 E2801C02        add              r1, r0, #(512)
    25 00000008 E5801000        str              r1, [r0]
    26 0000000C E59F1058        ldr              r1, =calc
    27 00000010 E5801004        str              r1, [r0, #4]
@@ -154,7 +154,7 @@ ARM Macro Assembler    Page 3
    29 00000018 E5801008        str              r1, [r0, #8]
    30 0000001C         
    31 0000001C E59F004C        LDR              R0, =thread1s
-   32 00000020 E2801C02        add              r1, r0, #512
+   32 00000020 E2801F72        add              r1, r0, #(512-14*4)
    33 00000024 E5801000        str              r1, [r0]
    34 00000028 E59F1044        ldr              r1, =RGBLED
    35 0000002C E5801004        str              r1, [r0, #4]
@@ -576,8 +576,8 @@ ARM Macro Assembler    Page 9
    62 00000404                 END
 Command Line: --debug --xref --diag_suppress=9931 --apcs=interwork --depend=.\a
 pp.d -o.\app.o -IC:\Keil_v5\ARM\RV31\INC -IC:\Keil_v5\ARM\CMSIS\Include -IC:\Ke
-il_v5\ARM\INC\Philips --predefine="__EVAL SETA 1" --predefine="__MICROLIB SETA 
-1" --predefine="__UVISION_VERSION SETA 525" --list=.\listings\app.lst App.s
+il_v5\ARM\Inc\Philips --predefine="__EVAL SETA 1" --predefine="__MICROLIB SETA 
+1" --predefine="__UVISION_VERSION SETA 516" --list=.\listings\app.lst App.s
 
 
 

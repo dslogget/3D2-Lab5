@@ -165,8 +165,8 @@ ARM Macro Assembler    Page 3
               E0004014 
 Command Line: --debug --xref --diag_suppress=9931 --apcs=interwork --depend=.\c
 lock-init.d -o.\clock-init.o -IC:\Keil_v5\ARM\RV31\INC -IC:\Keil_v5\ARM\CMSIS\I
-nclude -IC:\Keil_v5\ARM\INC\Philips --predefine="__EVAL SETA 1" --predefine="__
-MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 525" --list=.\listings\clo
+nclude -IC:\Keil_v5\ARM\Inc\Philips --predefine="__EVAL SETA 1" --predefine="__
+MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 516" --list=.\listings\clo
 ck-init.lst Clock-init.s
 
 

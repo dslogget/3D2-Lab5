@@ -140,15 +140,15 @@ ARM Macro Assembler    Page 3
    15 00000000         
    16 00000000         
    17 00000000 E14F2000        MRS              r2, SPSR
-   18 00000004 E59F00C0        ldr              r0, =curr_thread
+   18 00000004 E59F00C8        ldr              r0, =curr_thread
    19 00000008 E5901000        ldr              r1, [r0]
    20 0000000C E3510003        cmp              r1, #3
    21 00000010 08BD401F        LDMFDEQ          SP!, {R0 - R4, lr}
-   22 00000014 0A00001E        BEQ              skip
+   22 00000014 0A00001F        BEQ              skip
    23 00000018         
    24 00000018 E3510000        cmp              r1, #0
-   25 0000001C 059F00AC        ldreq            r0, =thread0s
-   26 00000020 159F00AC        ldrne            r0, =thread1s
+   25 0000001C 059F00B4        ldreq            r0, =thread0s
+   26 00000020 159F00B4        ldrne            r0, =thread1s
    27 00000024         
    28 00000024 E5802008        str              r2, [r0, #8]
    29 00000028 E580E004        str              lr, [r0, #4]
@@ -156,66 +156,68 @@ ARM Macro Assembler    Page 3
    31 0000002C E8BD401F        LDMFD            SP!, {R0 - R4, lr}
    32 00000030 E321F09F        MSR              CPSR_c, #0x9F
    33 00000034 E92D5FFF        STMFD            sp!, {r0-R12, lr}
-   34 00000038 E59F108C        LDR              r1, =curr_thread
+   34 00000038 E59F1094        LDR              r1, =curr_thread
    35 0000003C E5910000        ldr              r0, [r1]
    36 00000040 E3500000        CMP              r0, #0
    37 00000044 0A000000        BEQ              switch2thread1
-   38 00000048 1A00000F        BNE              switch2thread0
+   38 00000048 1A000010        BNE              switch2thread0
    39 0000004C         
    40 0000004C         switch2thread1
-   41 0000004C E59F007C        ldr              r0, =thread0s
+   41 0000004C E59F0084        ldr              r0, =thread0s
    42 00000050 E580D000        STR              sp, [r0]
-   43 00000054 E59F0078        ldr              r0, =thread1s
+   43 00000054 E59F0080        ldr              r0, =thread1s
    44 00000058 E590D000        ldr              sp, [r0]
    45 0000005C E8BD5FFF        LDMFD            sp!, {r0-R12, lr}
    46 00000060 E321F092        MSR              CPSR_c, #0x92
    47 00000064 E92D0003        STMFD            sp!, {r0, r1}
-   48 00000068 E59F0060        ldr              r0, =thread0s
-   49 0000006C E590E004        ldr              lr, [r0, #4]
-   50 00000070 E5901008        ldr              r1, [r0, #8]
-   51 00000074 E59F0050        ldr              r0, =curr_thread
-   52 00000078 E3A01001        ldr              r1, =1
-   53 0000007C E5801000        str              r1, [r0]
-   54 00000080 E161F001        MSR              SPSR_c, r1
-   55 00000084 E92D4000        STMFD            sp!, {lr}
-   56 00000088 E8FD8003        LDMFD            sp!, {r0, r1, pc}^
-   57 0000008C         
-   58 0000008C         
-   59 0000008C         switch2thread0
-   60 0000008C E59F0040        ldr              r0, =thread1s
-   61 00000090 E580D000        STR              sp, [r0]
-   62 00000094         skip
-   63 00000094 E59F0034        ldr              r0, =thread0s
-   64 00000098 E590D000        ldr              sp, [r0]
-   65 0000009C E8BD5FFF        LDMFD            sp!, {R0-R12, lr}
-   66 000000A0 E321F092        MSR              CPSR_c, #0x92
-   67 000000A4 E92D0003        STMFD            sp!, {r0, r1}
-   68 000000A8 E59F0020        ldr              r0, =thread0s
-   69 000000AC E590E004        ldr              lr, [r0, #4]
-   70 000000B0 E5901008        ldr              r1, [r0, #8]
+   48 00000068 E59F0064        ldr              r0, =curr_thread
+   49 0000006C E3A01001        ldr              r1, =1
+   50 00000070 E5801000        str              r1, [r0]
+   51 00000074 E59F0060        ldr              r0, =thread1s
+   52 00000078 E590E004        ldr              lr, [r0, #4]
+   53 0000007C E5901008        ldr              r1, [r0, #8]
+   54 00000080 E168F001        MSR              SPSR_f, r1
+   55 00000084 E8BD0003        LDMFD            sp!, {r0, r1}
+   56 00000088 E92D4000        STMFD            sp!, {lr}
+   57 0000008C E8FD8000        LDMFD            sp!, {pc}^
+   58 00000090         
+   59 00000090         
+   60 00000090         switch2thread0
+   61 00000090 E59F0044        ldr              r0, =thread1s
+   62 00000094 E580D000        STR              sp, [r0]
+   63 00000098         skip
+   64 00000098 E59F0038        ldr              r0, =thread0s
+   65 0000009C E590D000        ldr              sp, [r0]
+   66 000000A0 E8BD5FFF        LDMFD            sp!, {R0-R12, lr}
+   67 000000A4 E321F092        MSR              CPSR_c, #0x92
+   68 000000A8 E92D0003        STMFD            sp!, {r0, r1}
+   69 000000AC E59F0020        ldr              r0, =curr_thread
+   70 000000B0 E3A01000        ldr              r1, =0
 
 
 
 ARM Macro Assembler    Page 4 
 
 
-   71 000000B4 E59F0010        ldr              r0, =curr_thread
-   72 000000B8 E3A01000        ldr              r1, =0
-   73 000000BC E5801000        str              r1, [r0]
-   74 000000C0 E161F001        MSR              SPSR_c, r1
-   75 000000C4 E92D4000        STMFD            sp!, {lr}
-   76 000000C8 E8FD8003        LDMFD            sp!, {r0, r1, pc}^
-   77 000000CC         
-   78 000000CC         
-   79 000000CC         
-   80 000000CC                 END
+   71 000000B4 E5801000        str              r1, [r0]
+   72 000000B8 E59F0018        ldr              r0, =thread0s
+   73 000000BC E590E004        ldr              lr, [r0, #4]
+   74 000000C0 E5901008        ldr              r1, [r0, #8]
+   75 000000C4 E168F001        MSR              SPSR_f, r1
+   76 000000C8 E8BD0003        LDMFD            sp!, {r0, r1}
+   77 000000CC E92D4000        STMFD            sp!, {lr}
+   78 000000D0 E8FD8000        LDMFD            sp!, {pc}^
+   79 000000D4         
+   80 000000D4         
+   81 000000D4         
+   82 000000D4                 END
               00000000 
               00000000 
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --apcs=interwork --depend=.\t
 hreadstarter.d -o.\threadstarter.o -IC:\Keil_v5\ARM\RV31\INC -IC:\Keil_v5\ARM\C
-MSIS\Include -IC:\Keil_v5\ARM\INC\Philips --predefine="__EVAL SETA 1" --predefi
-ne="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 525" --list=.\listin
+MSIS\Include -IC:\Keil_v5\ARM\Inc\Philips --predefine="__EVAL SETA 1" --predefi
+ne="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 516" --list=.\listin
 gs\threadstarter.lst ThreadStarter.s
 
 
@@ -246,19 +248,19 @@ Symbol: REG_DEFS
    Uses
       None
 Comment: REG_DEFS unused
-skip 00000094
+skip 00000098
 
 Symbol: skip
    Definitions
-      At line 62 in file ThreadStarter.s
+      At line 63 in file ThreadStarter.s
    Uses
       At line 22 in file ThreadStarter.s
 Comment: skip used once
-switch2thread0 0000008C
+switch2thread0 00000090
 
 Symbol: switch2thread0
    Definitions
-      At line 59 in file ThreadStarter.s
+      At line 60 in file ThreadStarter.s
    Uses
       At line 38 in file ThreadStarter.s
 Comment: switch2thread0 used once
@@ -704,8 +706,8 @@ Symbol: curr_thread
    Uses
       At line 18 in file ThreadStarter.s
       At line 34 in file ThreadStarter.s
-      At line 51 in file ThreadStarter.s
-      At line 71 in file ThreadStarter.s
+      At line 48 in file ThreadStarter.s
+      At line 69 in file ThreadStarter.s
 
 thread0s 00000000
 
@@ -715,9 +717,8 @@ Symbol: thread0s
    Uses
       At line 25 in file ThreadStarter.s
       At line 41 in file ThreadStarter.s
-      At line 48 in file ThreadStarter.s
-      At line 63 in file ThreadStarter.s
-      At line 68 in file ThreadStarter.s
+      At line 64 in file ThreadStarter.s
+      At line 72 in file ThreadStarter.s
 
 thread1s 00000000
 
@@ -727,7 +728,8 @@ Symbol: thread1s
    Uses
       At line 26 in file ThreadStarter.s
       At line 43 in file ThreadStarter.s
-      At line 60 in file ThreadStarter.s
+      At line 51 in file ThreadStarter.s
+      At line 61 in file ThreadStarter.s
 
 3 symbols
 390 symbols in table

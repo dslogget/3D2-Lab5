@@ -140,7 +140,7 @@ ARM Macro Assembler    Page 3
    15 00000010 E3110001        TST              R1, #2_1
    16 00000014 13A02001        LDRNE            R2, =2_1
    17 00000018 15802000        STRNE            R2, [R0]
-   18 0000001C 1B000003        BLNE             TIMERMATCH0INT
+   18 0000001C 1A000003        BNE              TIMERMATCH0INT
    19 00000020 E59F006C        LDR              R0, =VICVECTADDR
    20 00000024 E3A01000        LDR              R1, =0
    21 00000028 E5801000        STR              R1, [R0]
@@ -189,8 +189,8 @@ ARM Macro Assembler    Page 3
    61 00000004                 END
 Command Line: --debug --xref --diag_suppress=9931 --apcs=interwork --depend=".\
 interrupt handler.d" -o".\interrupt handler.o" -IC:\Keil_v5\ARM\RV31\INC -IC:\K
-eil_v5\ARM\CMSIS\Include -IC:\Keil_v5\ARM\INC\Philips --predefine="__EVAL SETA 
-1" --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 525" --l
+eil_v5\ARM\CMSIS\Include -IC:\Keil_v5\ARM\Inc\Philips --predefine="__EVAL SETA 
+1" --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 516" --l
 ist=.\listings\interrupt handler.lst "Interrupt Handler.s"
 
 

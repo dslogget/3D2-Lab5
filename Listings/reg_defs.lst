@@ -119,8 +119,8 @@ ARM Macro Assembler    Page 2
    57 00000000                 END
 Command Line: --debug --xref --diag_suppress=9931 --apcs=interwork --depend=.\r
 eg_defs.d -o.\reg_defs.o -IC:\Keil_v5\ARM\RV31\INC -IC:\Keil_v5\ARM\CMSIS\Inclu
-de -IC:\Keil_v5\ARM\INC\Philips --predefine="__EVAL SETA 1" --predefine="__MICR
-OLIB SETA 1" --predefine="__UVISION_VERSION SETA 525" --list=.\listings\reg_def
+de -IC:\Keil_v5\ARM\Inc\Philips --predefine="__EVAL SETA 1" --predefine="__MICR
+OLIB SETA 1" --predefine="__UVISION_VERSION SETA 516" --list=.\listings\reg_def
 s.lst REG_DEFS.s
 
 
